@@ -1,67 +1,116 @@
 import tkinter as tk
-import math
-from basic_ops import add, subtract, multiply, divide, mod
-from advanced_math import sin_func, cos_func, power, sqrt_func, floor_func, ceil_func
+from tkinter import ttk
+from basic_ops import add, subtract, multiply, divide
+from advanced_math import sin_func, cos_func, sqrt_func, power
 from memory import Memory
+
 
 class CalculatorUI:
     def __init__(self):
-        self.window = tk.Tk()
-        self.window.title("Калькулятор")
-        self.window.geometry("320x400")
+        self.root = tk.Tk()
+        self.root.title("Калькулятор")
+        self.root.geometry("400x700")
+        self.root.resizable(False, False)
+        self.root.configure(bg="#2b2b2b")
+
+        self.style = ttk.Style()
+        self.style.theme_use("clam")
+
+        self.bg_color = "#2b2b2b"
+        self.display_bg = "#3c3f41"
+        self.button_bg = "#4e5052"
+        self.button_hover = "#5c5f61"
+        self.accent = "#ff9800"
+        self.text_color = "#ffffff"
+
         self.memory = Memory()
 
-        self.entry = tk.Entry(self.window, width=20, font=("Arial", 20), borderwidth=3, relief="sunken")
-        self.entry.grid(row=0, column=0, columnspan=4, pady=10)
+        self.expression = ""
+
+        self.display = tk.Entry(
+            self.root,
+            font=("Consolas", 22, "bold"),
+            bg=self.display_bg,
+            fg=self.text_color,
+            bd=0,
+            justify="right",
+            insertbackground=self.text_color
+        )
+        self.display.pack(fill="x", ipady=20, padx=10, pady=15)
 
         self.create_buttons()
 
     def create_buttons(self):
-        buttons = [
-            ('7',1,0), ('8',1,1), ('9',1,2), ('+',1,3),
-            ('4',2,0), ('5',2,1), ('6',2,2), ('-',2,3),
-            ('1',3,0), ('2',3,1), ('3',3,2), ('*',3,3),
-            ('0',4,0), ('%',4,1), ('/',4,2), ('=',4,3),
-            ('sin',5,0), ('cos',5,1), ('pow',5,2), ('sqrt',5,3),
-            ('floor',6,0), ('ceil',6,1), ('MC',6,2), ('MR',6,3),
-            ('M+',7,0), ('C',7,1)
+        btns = [
+            ["MC", "MR", "M+", "C"],
+            ["7", "8", "9", "/"],
+            ["4", "5", "6", "*"],
+            ["1", "2", "3", "-"],
+            ["0", ".", "=", "+"],
+            ["sin", "cos", "√", "^"]
         ]
-        for (text, r, c) in buttons:
-            tk.Button(self.window, text=text, width=7, height=2, command=lambda t=text: self.on_click(t)).grid(row=r, column=c)
+
+        frame = tk.Frame(self.root, bg=self.bg_color)
+        frame.pack(padx=10, pady=10)
+
+        for r, row in enumerate(btns):
+            for c, char in enumerate(row):
+                btn = tk.Button(
+                    frame,
+                    text=char,
+                    font=("Consolas", 18, "bold"),
+                    bg=self.button_bg,
+                    fg=self.text_color,
+                    activebackground=self.button_hover,
+                    activeforeground=self.accent,
+                    width=5, height=2,
+                    relief="flat",
+                    command=lambda ch=char: self.on_click(ch)
+                )
+                btn.grid(row=r, column=c, padx=6, pady=6, sticky="nsew")
 
     def on_click(self, char):
-        try:
-            if char == '=':
-                expr = self.entry.get()
-                result = eval(expr)
-                self.entry.delete(0, tk.END)
-                self.entry.insert(tk.END, result)
-            elif char == 'C':
-                self.entry.delete(0, tk.END)
-            elif char == 'sin':
-                self.entry.insert(tk.END, f" = {sin_func(float(self.entry.get()))}")
-            elif char == 'cos':
-                self.entry.insert(tk.END, f" = {cos_func(float(self.entry.get()))}")
-            elif char == 'pow':
-                self.entry.insert(tk.END, "**")
-            elif char == 'sqrt':
-                self.entry.insert(tk.END, f" = {sqrt_func(float(self.entry.get()))}")
-            elif char == 'floor':
-                self.entry.insert(tk.END, f" = {floor_func(float(self.entry.get()))}")
-            elif char == 'ceil':
-                self.entry.insert(tk.END, f" = {ceil_func(float(self.entry.get()))}")
-            elif char == 'M+':
-                self.memory.memory_add(float(self.entry.get()))
-            elif char == 'MC':
-                self.memory.memory_clear()
-            elif char == 'MR':
-                self.entry.delete(0, tk.END)
-                self.entry.insert(tk.END, self.memory.memory_recall())
-            else:
-                self.entry.insert(tk.END, char)
-        except Exception as e:
-            self.entry.delete(0, tk.END)
-            self.entry.insert(tk.END, "Ошибка")
+        if char == "C":
+            self.expression = ""
+        elif char == "=":
+            try:
+                self.expression = str(eval(self.expression))
+            except Exception:
+                self.expression = "Ошибка"
+        elif char == "MC":
+            self.memory.memory_clear()
+        elif char == "MR":
+            self.expression += str(self.memory.memory_recall())
+        elif char == "M+":
+            try:
+                self.memory.memory_add(float(self.expression))
+            except:
+                pass
+        elif char == "sin":
+            try:
+                self.expression = str(sin_func(float(self.expression)))
+            except:
+                self.expression = "Ошибка"
+        elif char == "cos":
+            try:
+                self.expression = str(cos_func(float(self.expression)))
+            except:
+                self.expression = "Ошибка"
+        elif char == "√":
+            try:
+                self.expression = str(sqrt_func(float(self.expression)))
+            except:
+                self.expression = "Ошибка"
+        elif char == "^":
+            self.expression += "**"
+        else:
+            self.expression += str(char)
+
+        self.update_display()
+
+    def update_display(self):
+        self.display.delete(0, tk.END)
+        self.display.insert(tk.END, self.expression)
 
     def run(self):
-        self.window.mainloop()
+        self.root.mainloop()
