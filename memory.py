@@ -1,5 +1,5 @@
 class Memory:
-    def init(self):
+    def __init__(self):
         self.value = 0
 
     def memory_add(self, num):
