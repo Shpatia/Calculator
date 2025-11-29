@@ -53,13 +53,6 @@ jobs:
         cp dist/Calculator installer/
         echo "Установщик создан: $(ls -la installer/)"
         
-    - name: Install application
-      run: |
-        echo "Установка приложения..."
-        cd installer
-        chmod +x Calculator
-        echo "Приложение установлено и готово к запуску"
-        
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -86,16 +79,17 @@ jobs:
         pip install pyinstaller
         
     - name: Create Windows installer
+      shell: bash
       run: |
         echo "Создание Windows установщика..."
-        pyinstaller --onefile --windowed --name Calculator.exe ^
-          --add-data "ui.py;." ^
-          --add-data "advanced_math.py;." ^
-          --add-data "basic_ops.py;." ^
-          --add-data "memory.py;." ^
+        pyinstaller --onefile --windowed --name Calculator.exe \
+          --add-data "ui.py;." \
+          --add-data "advanced_math.py;." \
+          --add-data "basic_ops.py;." \
+          --add-data "memory.py;." \
           main.py
-        mkdir installer
-        copy dist\Calculator.exe installer\
+        mkdir -p installer
+        cp dist/Calculator.exe installer/
         
     - name: Upload Windows artifacts
       uses: actions/upload-artifact@v4
