@@ -39,26 +39,6 @@ jobs:
       env:
         DISPLAY: ":99.0"
       continue-on-error: false
-      
-    - name: Create installer with PyInstaller
-      run: |
-        echo "Создание установщика..."
-        pyinstaller --onefile --windowed --name Calculator \
-          --add-data "ui.py:." \
-          --add-data "advanced_math.py:." \
-          --add-data "basic_ops.py:." \
-          --add-data "memory.py:." \
-          main.py
-        mkdir -p installer
-        cp dist/Calculator installer/
-        echo "Установщик создан: $(ls -la installer/)"
-        
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: calculator-installer-linux
-        path: installer/
-        retention-days: 30
         
   build-windows:
     runs-on: windows-latest
