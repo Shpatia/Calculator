@@ -73,6 +73,7 @@ jobs:
           Architecture: amd64
           Maintainer: CI danyagorzshanov@yandex.ru
           Description: Calculator
+          License: MIT License
           EOF
           cp dist/calculator deb/usr/bin/
           dpkg-deb --build deb
@@ -82,5 +83,6 @@ jobs:
         with:
           name: calculator-deb
           path: installer/calculator_1.0-1_amd64.deb
+
 
 
