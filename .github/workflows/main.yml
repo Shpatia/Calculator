@@ -27,14 +27,10 @@ jobs:
         
     - name: Build project
       run: |
-        echo "Сборка проекта..."
-        # Проверка синтаксиса и импортов
         python -m compileall .
-        echo "Проект успешно собран"
         
     - name: Run unittests
       run: |
-        echo "Запуск тестов..."
         python -m unittest discover -s tests -p "test_*.py"
       env:
         DISPLAY: ":99.0"
@@ -77,3 +73,4 @@ jobs:
         name: calculator-installer-windows
         path: installer/
         retention-days: 30
+
