@@ -71,7 +71,7 @@ jobs:
           Section: utils
           Priority: optional
           Architecture: amd64
-          Maintainer: CI <noreply@example.com>
+          Maintainer: CI danyagorzshanov@yandex.ru
           Description: Calculator
           EOF
           cp dist/calculator deb/usr/bin/
@@ -82,4 +82,5 @@ jobs:
         with:
           name: calculator-deb
           path: installer/calculator_1.0-1_amd64.deb
+
 
