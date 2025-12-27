@@ -2,9 +2,9 @@ name: Calculator CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   test:
@@ -82,3 +82,4 @@ jobs:
         with:
           name: calculator-deb
           path: installer/calculator_1.0-1_amd64.deb
+
