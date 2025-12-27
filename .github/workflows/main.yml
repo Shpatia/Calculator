@@ -3,9 +3,9 @@ name: Calculator CI Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, Danya-final ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, Danya-final ]
 
 jobs:
   build-and-test:
